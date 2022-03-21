@@ -113,16 +113,19 @@ class WidgetRestControllerTest {
     void testModifyWidget() throws Exception {
         //Mock servide
         //Optional<Widget> widgeToPut = Optional.of(new Widget(1L, "Computer", "laptop", 1));
-        Widget widgeToUpdate = new Widget(1L, "Computer", "Gamer laptop", 1);
+        Widget widgetToUpdate = new Widget(1L, "Computer", "Gamer laptop", 1);
         //doReturn(widgeToPut).when(service).findById(1L);
 
-        doReturn(widgeToUpdate).when(service).save(any());
+        doReturn(widgetToUpdate).when(service).save(any());
 
         //Execute the PUT method
         mockMvc.perform(put("/rest/widget/{id}", 1L)
-                .content(asJsonString(widgeToUpdate))
+                .content(asJsonString(widgetToUpdate))
+                .header(HttpHeaders.IF_MATCH, "1") //arreglar
                 .contentType(MediaType.APPLICATION_JSON)
+                //.headers(HttpHeaders.IF_MATCH)
                 .accept(MediaType.APPLICATION_JSON))
+
 
                 //Validate response and content type
                 .andExpect(status().isOk());
