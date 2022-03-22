@@ -112,35 +112,34 @@ class WidgetRestControllerTest {
     @DisplayName("PUT /rest/widget/1")
     void testModifyWidget() throws Exception {
         //Mock servide
-        //Optional<Widget> widgeToPut = Optional.of(new Widget(1L, "Computer", "laptop", 1));
-        Widget widgetToUpdate = new Widget(1L, "Computer", "Gamer laptop", 1);
-        //doReturn(widgeToPut).when(service).findById(1L);
+        Widget widgetToPut = new Widget(1L, "Computer", "laptop", 1);
+        Widget widgetToUpdate = new Widget(1L, "Computer update", "Gamer laptop", 1);
 
+        doReturn(Optional.of(widgetToPut)).when(service).findById(1L);
         doReturn(widgetToUpdate).when(service).save(any());
 
         //Execute the PUT method
         mockMvc.perform(put("/rest/widget/{id}", 1L)
-                .content(asJsonString(widgetToUpdate))
                 .header(HttpHeaders.IF_MATCH, "1") //arreglar
+                .content(asJsonString(widgetToPut))
                 .contentType(MediaType.APPLICATION_JSON)
-                //.headers(HttpHeaders.IF_MATCH)
                 .accept(MediaType.APPLICATION_JSON))
 
 
                 //Validate response and content type
-                .andExpect(status().isOk());
-                /*.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
 
 
                 //Validate headers
-                .andExpect(header().string(HttpHeaders.LOCATION, "/rest/proper/widget/1"))
-                .andExpect(header().string(HttpHeaders.ETAG, "\"1\""));*/
+                .andExpect(header().string(HttpHeaders.LOCATION, "/rest/widget/1"))
+                .andExpect(header().string(HttpHeaders.ETAG, "\"1\""))
 
                 //validate the returned content
-                /*.andExpect(jsonPath("$.id", is(1)))
-                .andExpect(jsonPath("$.name", is("Computer")))
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Computer update")))
                 .andExpect(jsonPath("$.description", is("Gamer laptop")))
-                .andExpect(jsonPath("$.version", is(1)));*/
+                .andExpect(jsonPath("$.version", is(1)));
     }
 
     //Test gets the widget by id
