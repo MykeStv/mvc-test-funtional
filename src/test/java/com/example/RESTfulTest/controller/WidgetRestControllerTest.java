@@ -108,6 +108,7 @@ class WidgetRestControllerTest {
                 .andExpect(jsonPath("$.version", is(1)));
     }
 
+    //Metodo PUT
     @Test
     @DisplayName("PUT /rest/widget/1")
     void testModifyWidget() throws Exception {
@@ -140,6 +141,26 @@ class WidgetRestControllerTest {
                 .andExpect(jsonPath("$.name", is("Computer update")))
                 .andExpect(jsonPath("$.description", is("Gamer laptop")))
                 .andExpect(jsonPath("$.version", is(1)));
+    }
+
+    //PUT para modificar un elemento que no se encuentra en la base de datos (not found)
+    @Test
+    @DisplayName("PUT /rest/widget/1 - not found")
+    void testPutWidgetNotFound() throws Exception {
+        //setup mock
+        Widget widgetToPut = new Widget(1L, "Computer", "laptop", 1);
+        doReturn(Optional.empty()).when(service).findById(1L);
+
+        //Execute put method
+        mockMvc.perform(put("/rest/widget/{id}", 1L)
+                .header(HttpHeaders.IF_MATCH, "1")
+                .content(asJsonString(widgetToPut))
+                .contentType(MediaType.APPLICATION_JSON))
+
+                //Validate the method
+                .andExpect(status().isNotFound());
+
+
     }
 
     //Test gets the widget by id
